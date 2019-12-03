@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 
 //About Route
 app.get("/about", (req, res) => {
-  const title = "About Page";
+  const title = "About";
   res.render("about", {
     title: title
   });
