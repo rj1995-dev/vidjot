@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 //Create Schema
 const IdeaSchema = new Schema({
-  tittle: {
+  title: {
     type: String,
     required: true
   },
