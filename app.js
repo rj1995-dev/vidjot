@@ -8,6 +8,9 @@ const session = require("express-session");
 
 const app = express();
 
+//Loads Route
+const ideas = require("./routes/ideas");
+const users = require("./routes/users");
 //Map global promises
 mongoose.Promise = global.Promise;
 //Connect to mongoose
@@ -20,9 +23,6 @@ mongoose
   .then(() => console.log("MongoDB Connected...."))
   .catch(err => console.log(err));
 
-//Load Idea Model
-require("./models/Idea");
-const Idea = mongoose.model("Ideas");
 //Handlebrs Middlebars
 app.engine(
   "handlebars",
@@ -49,7 +49,7 @@ app.use(
   })
 );
 
-//Flash Middleware
+//Flash Message Middleware
 app.use(flash());
 
 //Global Variable
@@ -84,85 +84,9 @@ app.get("/about", (req, res) => {
   });
 });
 
-//Idea index Page
-app.get("/ideas", (req, res) => {
-  Idea.find({})
-    .sort({ date: "desc" })
-    .then(ideas => {
-      res.render("ideas/index", {
-        ideas: ideas
-      });
-    });
-});
-
-//Add Idea Form
-app.get("/ideas/add", (req, res) => {
-  res.render("ideas/add");
-});
-
-//Edit Idea Form
-app.get("/ideas/edit/:id", (req, res) => {
-  Idea.findOne({
-    _id: req.params.id
-  }).then(idea => {
-    res.render("ideas/edit", {
-      idea: idea
-    });
-  });
-});
-
-//Delete Form Data
-app.delete("/ideas/:id", (req, res) => {
-  Idea.deleteOne({
-    _id: req.params.id
-  }).then(() => {
-    req.flash("success_msg", "Video idea removed");
-    res.redirect("/ideas");
-  });
-});
-
-//Process form Data
-app.post("/ideas", (req, res) => {
-  let errors = [];
-  if (!req.body.title) {
-    errors.push({ text: "Please add a title" });
-  }
-  if (!req.body.details) {
-    errors.push({ text: "Please add some details" });
-  }
-
-  if (errors.length > 0) {
-    res.render("ideas/add", {
-      errors: errors,
-      title: req.body.title,
-      details: req.body.details
-    });
-  } else {
-    const newUser = {
-      title: req.body.title,
-      details: req.body.details
-    };
-    new Idea(newUser).save().then(idea => {
-      req.flash("success_msg", "Video idea added");
-      res.redirect("/ideas");
-    });
-  }
-});
-
-//Process Edit Form Data
-app.put("/ideas/:id", (req, res) => {
-  Idea.findOne({
-    _id: req.params.id
-  }).then(idea => {
-    //new value
-    idea.title = req.body.title;
-    idea.details = req.body.details;
-    idea.save().then(idea => {
-      req.flash("success_msg", "Video idea updated");
-      res.redirect("/ideas");
-    });
-  });
-});
+//Use Route
+app.use("/ideas", ideas);
+app.use("/users", users);
 
 const port = 5000;
 app.listen(port, () => {
