@@ -4,7 +4,7 @@ const router = express.Router();
 
 //Load Idea Model
 require("../models/Idea");
-const Idea = mongoose.model("Ideas");
+const Idea = mongoose.model("ideas");
 
 //Idea index Page
 router.get("/", (req, res) => {
