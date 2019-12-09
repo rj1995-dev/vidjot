@@ -77,7 +77,7 @@ app.use(function(req, res, next) {
 //Middleware works
 app.use(function(req, res, next) {
   // console.log(Date.now());
-  req.name = "Ram";
+  // req.name = "Ram";
   next();
 });
 
