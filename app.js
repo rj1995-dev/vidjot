@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
+const passport = require("passport");
 const session = require("express-session");
 
 const app = express();
@@ -12,6 +13,10 @@ const app = express();
 //Loads Route
 const ideas = require("./routes/ideas");
 const users = require("./routes/users");
+
+//Passport Config
+require("./config/passport")(passport);
+
 //Map global promises
 mongoose.Promise = global.Promise;
 //Connect to mongoose
@@ -53,6 +58,10 @@ app.use(
   })
 );
 
+//Pasport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
 //Flash Message Middleware
 app.use(flash());
 
@@ -61,6 +70,7 @@ app.use(function(req, res, next) {
   res.locals.success_msg = req.flash("success_msg");
   res.locals.error_msg = req.flash("error_msg");
   res.locals.error = req.flash("error");
+  res.locals.user = req.user || null;
   next();
 });
 
