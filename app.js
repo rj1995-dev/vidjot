@@ -18,12 +18,12 @@ const users = require("./routes/users");
 require("./config/passport")(passport);
 
 //DB config
-const db = require("./config/database");
+// const db = require("./config/database");
 //Map global promises
 mongoose.Promise = global.Promise;
 //Connect to mongoose
 mongoose
-  .connect(db.mongoURI, {
+  .connect("mongodb://ram:ram1995@ds353378.mlab.com:53378/videos-ideas-app", {
     // useMongoClient: true,
     useNewUrlParser: true,
     useUnifiedTopology: true
